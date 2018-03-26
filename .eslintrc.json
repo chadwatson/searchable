@@ -1,5 +1,6 @@
 {
-  "plugins": ["prettier"],
+  "extends": ["plugin:flowtype/recommended"],
+  "plugins": ["flowtype", "prettier"],
   "rules": {
     "prettier/prettier": "error"
   },

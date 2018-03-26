@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@babel/code-frame@7.0.0-beta.42", "@babel/code-frame@^7.0.0-beta.35":
+"@babel/code-frame@7.0.0-beta.42", "@babel/code-frame@^7.0.0-beta.35", "@babel/code-frame@^7.0.0-beta.40":
   version "7.0.0-beta.42"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.42.tgz#a9c83233fa7cd06b39dc77adbb908616ff4f1962"
   dependencies:
@@ -222,6 +222,12 @@
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.42"
 
+"@babel/plugin-syntax-flow@7.0.0-beta.42":
+  version "7.0.0-beta.42"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-flow/-/plugin-syntax-flow-7.0.0-beta.42.tgz#cc210adacb65c6c155578e7ccee30a53d1003a23"
+  dependencies:
+    "@babel/helper-plugin-utils" "7.0.0-beta.42"
+
 "@babel/plugin-syntax-object-rest-spread@7.0.0-beta.42":
   version "7.0.0-beta.42"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-object-rest-spread/-/plugin-syntax-object-rest-spread-7.0.0-beta.42.tgz#aa789865abe78a4895d4a0be9de4d34b1a1d5063"
@@ -306,6 +312,13 @@
   dependencies:
     "@babel/helper-builder-binary-assignment-operator-visitor" "7.0.0-beta.42"
     "@babel/helper-plugin-utils" "7.0.0-beta.42"
+
+"@babel/plugin-transform-flow-strip-types@7.0.0-beta.42":
+  version "7.0.0-beta.42"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-flow-strip-types/-/plugin-transform-flow-strip-types-7.0.0-beta.42.tgz#0902538b641e1a6fe5d7dc49389560112bfd4071"
+  dependencies:
+    "@babel/helper-plugin-utils" "7.0.0-beta.42"
+    "@babel/plugin-syntax-flow" "7.0.0-beta.42"
 
 "@babel/plugin-transform-for-of@7.0.0-beta.42":
   version "7.0.0-beta.42"
@@ -466,6 +479,13 @@
     invariant "^2.2.2"
     semver "^5.3.0"
 
+"@babel/preset-flow@^7.0.0-beta.42":
+  version "7.0.0-beta.42"
+  resolved "https://registry.yarnpkg.com/@babel/preset-flow/-/preset-flow-7.0.0-beta.42.tgz#580d8d1e418ac1bd0032436a02639267ebdbe1c7"
+  dependencies:
+    "@babel/helper-plugin-utils" "7.0.0-beta.42"
+    "@babel/plugin-transform-flow-strip-types" "7.0.0-beta.42"
+
 "@babel/template@7.0.0-beta.42":
   version "7.0.0-beta.42"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.0.0-beta.42.tgz#7186d4e70d44cdec975049ba0a73bdaf5cdee052"
@@ -475,7 +495,7 @@
     babylon "7.0.0-beta.42"
     lodash "^4.2.0"
 
-"@babel/traverse@7.0.0-beta.42":
+"@babel/traverse@7.0.0-beta.42", "@babel/traverse@^7.0.0-beta.40":
   version "7.0.0-beta.42"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.0.0-beta.42.tgz#f4bf4d1e33d41baf45205e2d0463591d57326285"
   dependencies:
@@ -490,7 +510,7 @@
     invariant "^2.2.0"
     lodash "^4.2.0"
 
-"@babel/types@7.0.0-beta.42":
+"@babel/types@7.0.0-beta.42", "@babel/types@^7.0.0-beta.40":
   version "7.0.0-beta.42"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0-beta.42.tgz#1e2118767684880f6963801b272fd2b3348efacc"
   dependencies:
@@ -744,6 +764,17 @@ babel-core@^7.0.0-0:
   version "7.0.0-bridge.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
 
+babel-eslint@^8.2.2:
+  version "8.2.2"
+  resolved "http://registry.npmjs.org/babel-eslint/-/babel-eslint-8.2.2.tgz#1102273354c6f0b29b4ea28a65f97d122296b68b"
+  dependencies:
+    "@babel/code-frame" "^7.0.0-beta.40"
+    "@babel/traverse" "^7.0.0-beta.40"
+    "@babel/types" "^7.0.0-beta.40"
+    babylon "^7.0.0-beta.40"
+    eslint-scope "~3.7.1"
+    eslint-visitor-keys "^1.0.0"
+
 babel-generator@^6.18.0, babel-generator@^6.26.0:
   version "6.26.1"
   resolved "https://registry.yarnpkg.com/babel-generator/-/babel-generator-6.26.1.tgz#1844408d3b8f0d35a404ea7ac180f087a601bd90"
@@ -852,7 +883,7 @@ babel-types@^6.18.0, babel-types@^6.26.0:
     lodash "^4.17.4"
     to-fast-properties "^1.0.3"
 
-babylon@7.0.0-beta.42:
+babylon@7.0.0-beta.42, babylon@^7.0.0-beta.40:
   version "7.0.0-beta.42"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-7.0.0-beta.42.tgz#67cfabcd4f3ec82999d29031ccdea89d0ba99657"
 
@@ -1356,6 +1387,12 @@ escodegen@^1.9.0:
   optionalDependencies:
     source-map "~0.6.1"
 
+eslint-plugin-flow@^2.29.1:
+  version "2.29.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-flow/-/eslint-plugin-flow-2.29.1.tgz#ea20f59b759b7ad00e2f598b6a82ba232869b2a3"
+  dependencies:
+    lodash "^4.15.0"
+
 eslint-plugin-prettier@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-2.6.0.tgz#33e4e228bdb06142d03c560ce04ec23f6c767dd7"
@@ -1363,7 +1400,7 @@ eslint-plugin-prettier@^2.6.0:
     fast-diff "^1.1.1"
     jest-docblock "^21.0.0"
 
-eslint-scope@^3.7.1:
+eslint-scope@^3.7.1, eslint-scope@~3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-3.7.1.tgz#3d63c3edfda02e06e01a452ad88caacc7cdcb6e8"
   dependencies:
@@ -2745,7 +2782,7 @@ lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
 
-lodash@^4.13.1, lodash@^4.14.0, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0:
+lodash@^4.13.1, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0:
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
