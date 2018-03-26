@@ -93,4 +93,20 @@ describe("Searchable", () => {
       ).toEqual(["z"]);
     });
   });
+  describe("fold", () => {
+    test("Is a function", () => {
+      expect(typeof Searchable(["x", "y", "z"]).fold).toBe("function");
+    });
+    test("Returns the result of applying the collection to the given function", () => {
+      const collection = ["x", "y", "z"];
+      const searchable = Searchable(collection);
+
+      expect(searchable.fold(x => x)).toEqual(collection);
+      expect(searchable.fold(x => x.map(a => a.toUpperCase()))).toEqual([
+        "X",
+        "Y",
+        "Z"
+      ]);
+    });
+  });
 });
