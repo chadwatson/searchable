@@ -1,4 +1,7 @@
-const { default: Searchable, isSearchable } = require("../src/index");
+const {
+  Searchable,
+  isSearchable,
+} = require("../src/index");
 
 describe("isSearchable", () => {
   test("Is a function", () => {
