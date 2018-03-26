@@ -1,6 +1,9 @@
 const {
   Searchable,
   isSearchable,
+  standardQuery,
+  looseQuery,
+  strictQuery
 } = require("../src/index");
 
 describe("isSearchable", () => {
@@ -10,6 +13,42 @@ describe("isSearchable", () => {
   test("Yields a boolean", () => {
     expect(isSearchable("x")).toBe(false);
     expect(isSearchable(Searchable("x"))).toBe(true);
+  });
+});
+describe("standardQuery", () => {
+  test("Is a function", () => {
+    expect(typeof standardQuery).toBe("function");
+  });
+  test("Returns an object with the correct data", () => {
+    const query = standardQuery("x");
+    expect(query.searchTerm).toEqual("x");
+    expect(typeof query.fuzziness).toBe("number");
+    expect(typeof query.minScore).toBe("number");
+    expect(typeof query.shouldScoreValue).toBe("function");
+  });
+});
+describe("looseQuery", () => {
+  test("Is a function", () => {
+    expect(typeof looseQuery).toBe("function");
+  });
+  test("Returns an object with the correct data", () => {
+    const query = looseQuery("x");
+    expect(query.searchTerm).toEqual("x");
+    expect(typeof query.fuzziness).toBe("number");
+    expect(typeof query.minScore).toBe("number");
+    expect(typeof query.shouldScoreValue).toBe("function");
+  });
+});
+describe("strictQuery", () => {
+  test("Is a function", () => {
+    expect(typeof strictQuery).toBe("function");
+  });
+  test("Returns an object with the correct data", () => {
+    const query = strictQuery("x");
+    expect(query.searchTerm).toEqual("x");
+    expect(typeof query.fuzziness).toBe("number");
+    expect(typeof query.minScore).toBe("number");
+    expect(typeof query.shouldScoreValue).toBe("function");
   });
 });
 describe("Searchable", () => {
