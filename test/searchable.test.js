@@ -1,5 +1,14 @@
-const Searchable = require("../src/index").default;
+const { default: Searchable, isSearchable } = require("../src/index");
 
+describe("isSearchable", () => {
+  test("Is a function", () => {
+    expect(typeof isSearchable).toBe("function");
+  });
+  test("Yields a boolean", () => {
+    expect(isSearchable("x")).toBe(false);
+    expect(isSearchable(Searchable("x"))).toBe(true);
+  });
+});
 describe("Searchable", () => {
   describe("inspect", () => {
     test("Is a function", () => {
@@ -13,23 +22,16 @@ describe("Searchable", () => {
     test("Is a function", () => {
       expect(typeof Searchable.of).toBe("function");
     });
-    test("Creates a Searchable where the value is an array containing the arguments", () => {
-      expect(Searchable.of("x", "y", "z").inspect()).toEqual(
-        'Searchable(["x","y","z"])'
-      );
+    test("Creates a Searchable", () => {
+      expect(isSearchable(Searchable.of("x", "y", "z"))).toBe(true);
     });
   });
   describe("from", () => {
     test("Is a function", () => {
       expect(typeof Searchable.from).toBe("function");
     });
-    test("Creates a Searchable where the value is the first argument", () => {
-      expect(Searchable.from(["x", "y", "z"]).inspect()).toEqual(
-        'Searchable(["x","y","z"])'
-      );
-      expect(Searchable.from({ x: "X", y: "Y", z: "Z" }).inspect()).toEqual(
-        'Searchable({"x":"X","y":"Y","z":"Z"})'
-      );
+    test("Creates a Searchable", () => {
+      expect(isSearchable(Searchable.from(["x", "y", "z"])));
     });
   });
   describe("results", () => {
@@ -49,10 +51,8 @@ describe("Searchable", () => {
     });
     test("Returns a Searchable", () => {
       expect(
-        Searchable(["x", "y", "z"])
-          .map(x => x.toUpperCase())
-          .inspect()
-      ).toEqual('Searchable(["X","Y","Z"])');
+        isSearchable(Searchable(["x", "y", "z"]).map(x => x.toUpperCase()))
+      ).toBe(true);
     });
     test("Can map value", () => {
       expect(
@@ -75,10 +75,8 @@ describe("Searchable", () => {
     });
     test("Returns a Searchable", () => {
       expect(
-        Searchable(["x", "y", "z"])
-          .filter(x => x > "x")
-          .inspect()
-      ).toEqual('Searchable(["y","z"])');
+        isSearchable(Searchable(["x", "y", "z"]).filter(x => x > "x"))
+      ).toBe(true);
     });
     test("Can filter with value", () => {
       expect(
