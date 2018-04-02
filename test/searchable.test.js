@@ -6,6 +6,35 @@ const {
   strictQuery
 } = require("../src/index");
 
+const MOVIES = [
+  {
+    title: "Back to the Future",
+    director: "Robert Zemeckis",
+    year: 1985,
+    cast: ["Michael J. Fox", "Christopher Lloyd", "Lea Thompson"]
+  },
+  {
+    title: "Star Wars: Episode V - The Empire Strikes Back",
+    director: "Irvin Kershner",
+    year: 1980,
+    cast: ["Mark Hamill", "Harrison Ford", "Carrie Fisher"]
+  }
+];
+
+function MappableObject(value) {
+  this.value = value;
+}
+MappableObject.prototype.map = f =>
+  Object.keys(this.value).reduce(
+    (acc, x) => ({ ...acc, [x]: f(this.value[x]) }),
+    {}
+  );
+MappableObject.prototype.filter = f =>
+  Object.keys(this.value).reduce(
+    (acc, x) => (f(this.value[x]) ? { ...acc, [x]: this.value[x] } : acc),
+    {}
+  );
+
 describe("isSearchable", () => {
   test("Is a function", () => {
     expect(typeof isSearchable).toBe("function");
@@ -149,6 +178,36 @@ describe("Searchable", () => {
         "Y",
         "Z"
       ]);
+    });
+  });
+  describe("search", () => {
+    test("Is a function", () => {
+      expect(typeof Searchable(["x", "y", "z"]).search).toBe("function");
+    });
+    test("Accepts a string", () => {
+      expect(Searchable(["x", "y", "z"]).search("x")).not.toThrow();
+    });
+    test("Accepts an object", () => {
+      const query = {
+        searchTerm: "x",
+        fuzziness: 0.5,
+        minScore: 0.2,
+        shouldScoreValue: () => true
+      };
+      expect(Searchable(["x", "y", "z"]).search(query)).not.toThrow();
+    });
+    test("Returns a Searchable of the same type where the data is filtered", () => {
+      let result = Searchable(["x", "y", "z"]).search("x");
+      expect(isSearchable(result)).toBe(true);
+      expect(Array.isArray(result.result)).toBe(true);
+      expect(result.result).toEqual(["x"]);
+
+      result = Searchable(
+        new MappableObject({ x: "x", y: "y", z: "z" })
+      ).search("x");
+      expect(isSearchable(result)).toBe(true);
+      expect(result.result instanceof MappableObject).toBe(true);
+      expect(result.result).toEqual(new MappableObject({ x: "x" }));
     });
   });
 });
