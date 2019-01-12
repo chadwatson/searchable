@@ -1,8 +1,6 @@
-// @flow
 import { is, either } from "ramda";
-import type { Query } from "../typeDefinitions/flow";
 
-const standardQuery = (searchTerm: string): Query => ({
+const standardQuery = searchTerm => ({
   searchTerm,
   fuzziness: 0.5,
   minScore: 0.2,

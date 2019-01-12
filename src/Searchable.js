@@ -1,4 +1,3 @@
-// @flow
 import {
   compose,
   map,
@@ -14,7 +13,7 @@ import { SEARCHABLE_SENTINAL } from "./constants";
 const flippedMap = flip(addIndex(map));
 const flippedFilter = flip(addIndex(filter));
 
-const Searchable = (x: string) => ({
+const Searchable = x => ({
   map: compose(Searchable, flippedMap(x)),
   filter: compose(Searchable, flippedFilter(x)),
   fold: f => f(x),

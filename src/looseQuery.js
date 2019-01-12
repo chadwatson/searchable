@@ -1,11 +1,9 @@
-// @flow
-import standardQuery from './standardQuery'
-import type { Query } from '../typeDefinitions/flow'
+import standardQuery from "./standardQuery";
 
-const looseQuery = (searchTerm: string): Query => ({
+const looseQuery = searchTerm => ({
   ...standardQuery(searchTerm),
   fuzziness: 0.2,
-  minScore: 0.01,
-})
+  minScore: 0.01
+});
 
-export default looseQuery
+export default looseQuery;

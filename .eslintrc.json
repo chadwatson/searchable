@@ -1,11 +1,10 @@
 {
-  "extends": ["plugin:flowtype/recommended"],
-  "plugins": ["flowtype", "prettier"],
+  "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error"
   },
   "parserOptions": {
-     "ecmaVersion": 6,
-     "sourceType": "module"
-   }
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  }
 }

@@ -1,4 +1,3 @@
-// @flow
 import { compose, prop } from "ramda";
 import { SEARCHABLE_SENTINAL } from "./constants";
 
