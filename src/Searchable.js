@@ -1,28 +1,24 @@
-import {
-  compose,
-  map,
-  filter,
-  reduce,
-  flip,
-  always,
-  defaultTo,
-  addIndex
-} from "ramda";
 import { SEARCHABLE_SENTINAL } from "./constants";
+import IndexedSearchable from "./IndexedSearchable";
+import KeyedSearchable from "./KeyedSearchable";
 
-const flippedMap = flip(addIndex(map));
-const flippedFilter = flip(addIndex(filter));
+function Searchable(collection) {
+  if (Array.isArray(collection)) {
+    return new IndexedSearchable(collection);
+  }
 
-const Searchable = x => ({
-  map: compose(Searchable, flippedMap(x)),
-  filter: compose(Searchable, flippedFilter(x)),
-  fold: f => f(x),
-  results: always(x),
-  inspect: always(`Searchable(${JSON.stringify(x)})`),
-  [SEARCHABLE_SENTINAL]: true
-});
+  return new KeyedSearchable(collection);
+}
 
-Searchable.of = (...args) => Searchable([...args]);
-Searchable.from = Searchable;
+Searchable.Indexed = IndexedSearchable;
+Searchable.Keyed = KeyedSearchable;
+
+Searchable.isSearchable = maybeSearchable =>
+  IndexedSearchable.isIndexedSearchable(maybeSearchable) ||
+  KeyedSearchable.isKeyedSearchable(maybeSearchable);
+
+Searchable.of = IndexedSearchable.of;
+Searchable.fromArray = array => new IndexedSearchable(array);
+Searchable.fromObject = obj => new KeyedSearchable(obj);
 
 export default Searchable;

@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Searchable.Indexed of Returns a Searchable.Indexed from the arguments 1`] = `
+IndexedSearchable {
+  "$value": Array [
+    "x",
+    "y",
+    "z",
+  ],
+}
+`;
