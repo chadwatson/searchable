@@ -14,10 +14,58 @@ const MOVIES = [
     cast: ["Michael J. Fox", "Christopher Lloyd", "Lea Thompson"]
   },
   {
+    title: "Star Wars: Episode IV - A New Hope",
+    director: "Irvin Kershner",
+    year: 1977,
+    cast: ["Mark Hamill", "Harrison Ford", "Carrie Fisher"]
+  },
+  {
     title: "Star Wars: Episode V - The Empire Strikes Back",
     director: "Irvin Kershner",
     year: 1980,
     cast: ["Mark Hamill", "Harrison Ford", "Carrie Fisher"]
+  },
+  {
+    title: "Star Wars: Episode VI - Return of the Jedi",
+    director: "Richard Marquand",
+    year: 1983,
+    cast: ["Mark Hamill", "Harrison Ford", "Carrie Fisher"]
+  },
+  {
+    title: "Harry Potter and the Sorcerer's Stone",
+    director: "Chris Columbus",
+    year: 2001,
+    cast: ["Daniel Radcliffe", "Rupert Grint", "Richard Harris"]
+  },
+  {
+    title: "Harry Potter and the Chamber of Secrets",
+    director: "Chris Columbus",
+    year: 2002,
+    cast: ["Daniel Radcliffe", "Rupert Grint", "Emma Watson"]
+  },
+  {
+    title: "Harry Potter and the Prisoner of Azkaban",
+    director: "Alfonso Cuarón",
+    year: 2004,
+    cast: ["Daniel Radcliffe", "Emma Watson", "Rupert Grint"]
+  },
+  {
+    title: "The Lord of the Rings: The Fellowship of the Ring",
+    director: "Peter Jackson",
+    year: 2001,
+    cast: ["Elijah Wood", "Ian McKellen", "Orlando Bloom"]
+  },
+  {
+    title: "The Lord of the Rings: The Two Towers",
+    director: "Peter Jackson",
+    year: 2002,
+    cast: ["Elijah Wood", "Ian McKellen", "Viggo Mortensen"]
+  },
+  {
+    title: "The Lord of the Rings: The Return of the King",
+    director: "Peter Jackson",
+    year: 2003,
+    cast: ["Elijah Wood", "Ian McKellen", "Viggo Mortensen"]
   }
 ];
 
@@ -169,17 +217,15 @@ describe("Searchable.Indexed", () => {
         );
       });
     });
-    describe("inspect", () => {
-      it("Returns a string representation of the type", () => {
-        expect(Searchable.Indexed.of("x", "y", "z").inspect()).toEqual(
-          "Searchable.Indexed(x,y,z)"
-        );
+    describe("size", () => {
+      it("Returns the length of the value", () => {
+        expect(Searchable.Indexed.of("x", "y", "z").size).toEqual(3);
       });
     });
     describe("join", () => {
       it("Returns the wrapped value", () => {
-        const value = ["x", "y", "z"];
-        expect(new Searchable.Indexed(value).join()).toEqual(value);
+        const searchable = Searchable.Indexed.of("x", "y", "z");
+        expect(searchable.join()).toEqual(searchable.$value);
       });
     });
     describe("first", () => {
@@ -286,30 +332,76 @@ describe("Searchable.Indexed", () => {
         ).toEqual("xyz");
       });
     });
-  });
-  describe("search", () => {
-    test("Accepts a string", () => {
-      expect(Searchable.Indexed.of("x", "y", "z").search("x")).not.toThrow();
+    describe("get", () => {
+      it("Returns the item at the given index", () => {
+        expect(Searchable.Indexed.of("x", "y", "z").get(0)).toEqual("x");
+        expect(Searchable.Indexed.of("x", "y", "z").get(1)).toEqual("y");
+        expect(Searchable.Indexed.of("x", "y", "z").get(2)).toEqual("z");
+      });
     });
-    test("Accepts an object", () => {
-      const query = {
-        searchTerm: "x",
-        fuzziness: 0.5,
-        minScore: 0.2,
-        shouldScoreValue: () => true
-      };
-      expect(Searchable.Indexed.of("x", "y", "z").search(query)).not.toThrow();
-    });
-    test("Returns a Searchable.Indexed where the data is filtered", () => {
-      expect(Searchable.Indexed.of("x", "y", "z").search("x")).toEqual(
-        Searchable.Indexed.of("x")
-      );
-      expect(Searchable.Indexed.of("x", "y", "z").search("y")).toEqual(
-        Searchable.Indexed.of("y")
-      );
-      expect(Searchable.Indexed.of("x", "y", "z").search("z")).toEqual(
-        Searchable.Indexed.of("z")
-      );
+    describe("search", () => {
+      it("Accepts a string", () => {
+        const result = Searchable.Indexed.of("x", "y", "z").search("x");
+        expect(result.size).toBe(1);
+        expect(result.first()).toEqual("x");
+      });
+      it("Accepts a query object", () => {
+        const query = {
+          searchTerm: "x",
+          fuzziness: 0.5,
+          minScore: 0.2,
+          shouldScoreValue: () => true
+        };
+        const result = Searchable.Indexed.of("x", "y", "z").search(query);
+        expect(result.size).toBe(1);
+        expect(result.first()).toEqual("x");
+      });
+      it("Returns a Searchable.Indexed where the data is filtered", () => {
+        const searchable = Searchable.Indexed.of("x", "y", "z");
+
+        const result1 = searchable.search("x");
+        expect(Searchable.Indexed.isIndexedSearchable(result1));
+        expect(result1.size).toEqual(1);
+        expect(result1.first()).toEqual("x");
+
+        const result2 = searchable.search("y");
+        expect(Searchable.Indexed.isIndexedSearchable(result2));
+        expect(result2.size).toEqual(1);
+        expect(result2.first()).toEqual("y");
+
+        const result3 = searchable.search("z");
+        expect(Searchable.Indexed.isIndexedSearchable(result3));
+        expect(result3.size).toEqual(1);
+        expect(result3.first()).toEqual("z");
+      });
+      it("Searches nested objects", () => {
+        const searchable = new Searchable.Indexed(MOVIES);
+
+        const result1 = searchable.search("back");
+        expect(result1.size).toEqual(2);
+        expect(result1.get(0)).toEqual(MOVIES[0]);
+        expect(result1.get(1)).toEqual(MOVIES[2]);
+
+        const result2 = searchable.search("harr");
+        expect(result2.size).toEqual(6);
+        expect(result2.get(0)).toEqual(MOVIES[1]);
+        expect(result2.get(1)).toEqual(MOVIES[2]);
+        expect(result2.get(2)).toEqual(MOVIES[3]);
+        expect(result2.get(3)).toEqual(MOVIES[4]);
+        expect(result2.get(4)).toEqual(MOVIES[5]);
+        expect(result2.get(5)).toEqual(MOVIES[6]);
+
+        const result3 = searchable.search("chris");
+        expect(result3.size).toEqual(3);
+        expect(result3.get(0)).toEqual(MOVIES[0]);
+        expect(result3.get(1)).toEqual(MOVIES[4]);
+        expect(result3.get(2)).toEqual(MOVIES[5]);
+
+        const result4 = searchable.search(2001);
+        expect(result4.size).toEqual(2);
+        expect(result4.get(0)).toEqual(MOVIES[4]);
+        expect(result4.get(1)).toEqual(MOVIES[7]);
+      });
     });
   });
 });
@@ -339,13 +431,6 @@ describe("Searchable.Keyed", () => {
       it("Returns a string representation of the type", () => {
         expect(
           new Searchable.Keyed({ x: "x", y: "y", z: "z" }).toString()
-        ).toEqual('Searchable.Keyed({"x":"x","y":"y","z":"z"})');
-      });
-    });
-    describe("inspect", () => {
-      it("Returns a string representation of the type", () => {
-        expect(
-          new Searchable.Keyed({ x: "x", y: "y", z: "z" }).inspect()
         ).toEqual('Searchable.Keyed({"x":"x","y":"y","z":"z"})');
       });
     });
@@ -406,12 +491,12 @@ describe("Searchable.Keyed", () => {
     });
   });
   describe("search", () => {
-    test("Accepts a string", () => {
+    it("Accepts a string", () => {
       expect(
         new Searchable.Keyed({ x: "x", y: "y", z: "z" }).search("x")
       ).not.toThrow();
     });
-    test("Accepts an object", () => {
+    it("Accepts an object", () => {
       const query = {
         searchTerm: "x",
         fuzziness: 0.5,
@@ -422,7 +507,7 @@ describe("Searchable.Keyed", () => {
         new Searchable.Keyed({ x: "x", y: "y", z: "z" }).search(query)
       ).not.toThrow();
     });
-    test("Returns a Searchable.Keyed where the data is filtered", () => {
+    it("Returns a Searchable.Keyed where the data is filtered", () => {
       expect(
         new Searchable.Keyed({ x: "x", y: "y", z: "z" }).search("x")
       ).toEqual(new Searchable.Keyed(["x"]));

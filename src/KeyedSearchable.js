@@ -38,10 +38,6 @@ export default class KeyedSearchable {
     );
   }
 
-  inspect() {
-    return `Searchable.Keyed(${JSON.stringify(this.$value)})`;
-  }
-
   toString() {
     return `Searchable.Keyed(${JSON.stringify(this.$value)})`;
   }

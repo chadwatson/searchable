@@ -1,4 +1,9 @@
+import Maybe from "data.maybe";
+import { is, prop } from "ramda";
+import { Seq } from "immutable";
 import KeyedSearchable from "./KeyedSearchable";
+import standardQuery from "./standardQuery";
+import scoreItem from "./scoreItem";
 
 const SENTINAL = "@@__INDEXED_SEARCHABLE__@@";
 
@@ -22,7 +27,13 @@ export default class IndexedSearchable {
   [SENTINAL] = true;
 
   constructor(list) {
-    this.$value = list;
+    this.$value = Seq(list).map(value =>
+      typeof value.score === "number" ? value : { value, score: 0 }
+    );
+  }
+
+  get size() {
+    return this.$value.size;
   }
 
   join() {
@@ -34,40 +45,64 @@ export default class IndexedSearchable {
   }
 
   map(f) {
-    return new IndexedSearchable(this.$value.map(f));
+    return new IndexedSearchable(
+      this.$value.map(({ value, score }, index) => ({
+        value: f(value, index),
+        score
+      }))
+    );
   }
 
   fold(f, seed) {
-    return this.$value.reduce(f, seed);
+    return this.$value.reduce((acc, { value, score }) => f(acc, value), seed);
   }
 
   first() {
-    return this.$value[0];
+    return Maybe.fromNullable(this.$value.first())
+      .map(prop("value"))
+      .getOrElse(undefined);
   }
 
   last() {
-    return this.$value[this.$value.length - 1];
+    return Maybe.fromNullable(this.$value.last())
+      .map(prop("value"))
+      .getOrElse(undefined);
   }
 
   take(n) {
-    return new IndexedSearchable(this.$value.slice(0, n));
+    return new IndexedSearchable(this.$value.take(n));
   }
 
   takeLast(n) {
-    return new IndexedSearchable(
-      this.$value.slice(Math.max(0, this.$value.length - n))
-    );
+    return new IndexedSearchable(this.$value.takeLast(n));
   }
 
   slice(startIndex, endIndex) {
     return new IndexedSearchable(this.$value.slice(startIndex, endIndex));
   }
 
-  inspect() {
-    return `Searchable.Indexed(${this.$value})`;
+  get(index) {
+    return Maybe.fromNullable(this.$value.get(index))
+      .map(prop("value"))
+      .getOrElse(undefined);
+  }
+
+  search(stringOrQuery) {
+    const query = is(String, stringOrQuery)
+      ? standardQuery(stringOrQuery)
+      : stringOrQuery;
+    const getScore = scoreItem(query);
+    return new IndexedSearchable(
+      this.$value
+        .map(({ value }) => ({
+          value,
+          score: getScore(value)
+        }))
+        .filter(({ score }) => score >= query.minScore)
+    );
   }
 
   toString() {
-    return `Searchable.Indexed(${this.$value})`;
+    return `Searchable.Indexed(${this.$value.map(prop("value")).toArray()})`;
   }
 }
