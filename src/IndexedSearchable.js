@@ -28,7 +28,7 @@ export default class IndexedSearchable {
 
   constructor(list) {
     this.$value = Seq(list).map(value =>
-      typeof value.score === "number" ? value : { value, score: 0 }
+      typeof value.score === "number" ? value : { value, score: 1 }
     );
   }
 
