@@ -23,10 +23,6 @@ export default class KeyedSearchable {
     return this.$value;
   }
 
-  map(f) {
-    return new KeyedSearchable(mapObj(f, this.$value));
-  }
-
   merge(keyedSearchable) {
     return new KeyedSearchable(merge(this.$value, keyedSearchable.join()));
   }

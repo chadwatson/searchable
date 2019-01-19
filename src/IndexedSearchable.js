@@ -44,15 +44,6 @@ export default class IndexedSearchable {
     return new IndexedSearchable(this.$value.concat(searchable.join()));
   }
 
-  map(f) {
-    return new IndexedSearchable(
-      this.$value.map(({ value, score }, index) => ({
-        value: f(value, index),
-        score
-      }))
-    );
-  }
-
   fold(f, seed) {
     return this.$value.reduce((acc, { value, score }) => f(acc, value), seed);
   }

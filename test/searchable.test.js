@@ -304,24 +304,6 @@ describe("Searchable.Indexed", () => {
         ).toEqual(Searchable.Indexed.of("a", "b", "c", "d", "e", "f"));
       });
     });
-    describe("map", () => {
-      it("Returns a new Searchable.Indexed", () => {
-        expect(
-          Searchable.Indexed.of("x", "y", "z").map(x => x) instanceof
-            Searchable.Indexed
-        ).toBe(true);
-      });
-      it("Applies the function to each item, supplying the value as the first argument", () => {
-        expect(Searchable.Indexed.of("x", "y", "z").map(x => x)).toEqual(
-          Searchable.Indexed.of("x", "y", "z")
-        );
-      });
-      it("Applies the function to each item, supplying the index as the second argument", () => {
-        expect(
-          Searchable.Indexed.of("x", "y", "z").map((x, index) => index)
-        ).toEqual(Searchable.Indexed.of(0, 1, 2));
-      });
-    });
     describe("fold", () => {
       it("Applies the function to each item using the second argument as the seed value", () => {
         expect(
@@ -456,27 +438,6 @@ describe("Searchable.Keyed", () => {
             new Searchable.Keyed({ c: "C" })
           )
         ).toEqual(new Searchable.Keyed({ a: "a", b: "b", c: "C" }));
-      });
-    });
-    describe("map", () => {
-      it("Returns a new Searchable.Keyed", () => {
-        expect(
-          new Searchable.Keyed({ x: "x", y: "y", z: "z" }).map(
-            x => x
-          ) instanceof Searchable.Keyed
-        ).toBe(true);
-      });
-      it("Applies the function to each item, supplying the value as the first argument", () => {
-        expect(
-          new Searchable.Keyed({ x: "x", y: "y", z: "z" }).map(x => x)
-        ).toEqual(new Searchable.Keyed({ x: "x", y: "y", z: "z" }));
-      });
-      it("Applies the function to each item, supplying the key as the second argument", () => {
-        expect(
-          new Searchable.Keyed({ x: "X", y: "Y", z: "Z" }).map(
-            (x, index) => index
-          )
-        ).toEqual(new Searchable.Keyed({ x: "x", y: "y", z: "z" }));
       });
     });
     describe("fold", () => {
