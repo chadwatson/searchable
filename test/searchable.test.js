@@ -1,3 +1,4 @@
+import { Seq } from "immutable";
 import {
   Searchable,
   isSearchable,
@@ -418,11 +419,18 @@ describe("Searchable.Keyed", () => {
     });
     describe("join", () => {
       it("Returns the wrapped value", () => {
-        const value = { x: "x", y: "y", z: "z" };
-        expect(new Searchable.Keyed(value).join()).toEqual(value);
+        const searchable = new Searchable.Keyed({ x: "x", y: "y", z: "z" });
+        expect(searchable.join()).toEqual(searchable.$value);
       });
     });
     describe("merge", () => {
+      it("Returns a new Searchable.Keyed", () => {
+        expect(
+          new Searchable.Keyed({ a: "a", b: "b", c: "c" }).merge(
+            new Searchable.Keyed({ d: "d", e: "e" })
+          ) instanceof Searchable.Keyed
+        ).toBe(true);
+      });
       it("Adds key/values from the given Searchable.Keyed to the source structure", () => {
         expect(
           new Searchable.Keyed({ a: "a", b: "b", c: "c" }).merge(
@@ -443,7 +451,7 @@ describe("Searchable.Keyed", () => {
     describe("fold", () => {
       it("Applies the function to each item using the second argument as the seed value", () => {
         expect(
-          new Searchable.Keyed({ x: "x", y: "y", z: "z" }).fold(
+          new Searchable.Keyed({ a: "x", b: "y", c: "z" }).fold(
             (acc, x) => acc.concat(x),
             ""
           )

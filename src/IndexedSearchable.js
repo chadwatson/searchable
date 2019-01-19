@@ -21,7 +21,7 @@ export default class IndexedSearchable {
       throw new TypeError("A Searchable.Keyed must be provided.");
     }
 
-    return new IndexedSearchable(Object.values(keyedSearchable.join()));
+    return new IndexedSearchable(keyedSearchable.join().valueSeq());
   }
 
   [SENTINAL] = true;

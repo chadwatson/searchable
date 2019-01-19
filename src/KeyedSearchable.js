@@ -1,12 +1,7 @@
-import { merge } from "ramda";
+import { Seq } from "immutable";
+import { prop, isNil } from "ramda";
 
 const SENTINAL = "@@__KEYED_SEARCHABLE__@@";
-
-const mapObj = (f, obj) =>
-  Object.keys(obj).reduce(
-    (acc, key) => ({ ...acc, [key]: f(obj[key], key) }),
-    {}
-  );
 
 export default class KeyedSearchable {
   static isKeyedSearchable(maybeKeyedSearchable) {
@@ -15,8 +10,13 @@ export default class KeyedSearchable {
 
   [SENTINAL] = true;
 
-  constructor(obj) {
-    this.$value = obj;
+  constructor(collection) {
+    this.$value = Seq(collection)
+      .filterNot(isNil)
+      .map(item => ({
+        value: item.value || item,
+        score: item.score || 1
+      }));
   }
 
   join() {
@@ -24,17 +24,24 @@ export default class KeyedSearchable {
   }
 
   merge(keyedSearchable) {
-    return new KeyedSearchable(merge(this.$value, keyedSearchable.join()));
+    return new KeyedSearchable(
+      keyedSearchable
+        .join()
+        .reduce((acc, item, key) => acc.set(key, item), this.$value.toMap())
+        .toSeq()
+    );
   }
 
   fold(f, seed) {
-    return Object.keys(this.$value).reduce(
-      (acc, key) => f(acc, this.$value[key], key),
+    return this.$value.reduce(
+      (acc, { value, score }, key) => f(acc, value, key),
       seed
     );
   }
 
   toString() {
-    return `Searchable.Keyed(${JSON.stringify(this.$value)})`;
+    return `Searchable.Keyed(${JSON.stringify(
+      this.$value.map(prop("value")).toObject()
+    )})`;
   }
 }
