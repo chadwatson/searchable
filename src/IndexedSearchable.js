@@ -33,7 +33,7 @@ export default class IndexedSearchable {
   }
 
   get size() {
-    return this.$value.size;
+    return this.$value.count();
   }
 
   join() {
@@ -79,10 +79,12 @@ export default class IndexedSearchable {
   }
 
   search(stringOrQuery) {
-    const query = is(String, stringOrQuery)
-      ? standardQuery(stringOrQuery)
-      : stringOrQuery;
+    const query =
+      is(String, stringOrQuery) || is(Number, stringOrQuery)
+        ? standardQuery(stringOrQuery)
+        : stringOrQuery;
     const getScore = scoreItem(query);
+
     return new IndexedSearchable(
       this.$value
         .map(({ value }) => ({

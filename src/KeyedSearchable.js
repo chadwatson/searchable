@@ -1,5 +1,7 @@
 import { Seq } from "immutable";
-import { prop, isNil } from "ramda";
+import { prop, isNil, is } from "ramda";
+import standardQuery from "./standardQuery";
+import scoreItem from "./scoreItem";
 
 const SENTINAL = "@@__KEYED_SEARCHABLE__@@";
 
@@ -36,6 +38,22 @@ export default class KeyedSearchable {
     return this.$value.reduce(
       (acc, { value, score }, key) => f(acc, value, key),
       seed
+    );
+  }
+
+  search(stringOrQuery) {
+    const query = is(String, stringOrQuery)
+      ? standardQuery(stringOrQuery)
+      : stringOrQuery;
+    const getScore = scoreItem(query);
+
+    return new KeyedSearchable(
+      this.$value
+        .map(({ value }) => ({
+          value,
+          score: getScore(value)
+        }))
+        .filter(({ score }) => score >= query.minScore)
     );
   }
 

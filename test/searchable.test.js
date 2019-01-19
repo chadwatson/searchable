@@ -460,32 +460,16 @@ describe("Searchable.Keyed", () => {
     });
   });
   describe("search", () => {
-    it("Accepts a string", () => {
-      expect(
-        new Searchable.Keyed({ x: "x", y: "y", z: "z" }).search("x")
-      ).not.toThrow();
-    });
-    it("Accepts an object", () => {
-      const query = {
-        searchTerm: "x",
-        fuzziness: 0.5,
-        minScore: 0.2,
-        shouldScoreValue: () => true
-      };
-      expect(
-        new Searchable.Keyed({ x: "x", y: "y", z: "z" }).search(query)
-      ).not.toThrow();
-    });
     it("Returns a Searchable.Keyed where the data is filtered", () => {
       expect(
         new Searchable.Keyed({ x: "x", y: "y", z: "z" }).search("x")
-      ).toEqual(new Searchable.Keyed(["x"]));
+      ).toEqual(new Searchable.Keyed({ x: "x" }));
       expect(
         new Searchable.Keyed({ x: "x", y: "y", z: "z" }).search("y")
-      ).toEqual(new Searchable.Keyed(["y"]));
+      ).toEqual(new Searchable.Keyed({ y: "y" }));
       expect(
         new Searchable.Keyed({ x: "x", y: "y", z: "z" }).search("z")
-      ).toEqual(new Searchable.Keyed(["z"]));
+      ).toEqual(new Searchable.Keyed({ z: "z" }));
     });
   });
 });
